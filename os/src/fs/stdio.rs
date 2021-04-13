@@ -11,19 +11,23 @@ impl File for Stdin {
     fn readable(&self) -> bool { true }
     fn writable(&self) -> bool { false }
     fn read(&self, mut user_buf: UserBuffer) -> usize {
+        // println!("stdin");
         assert_eq!(user_buf.len(), 1);
         // busy loop
-        let mut c: usize;
+        let mut ch;
         loop {
-            c = console_getchar();
-            if c == 0 {
-                suspend_current_and_run_next();
-                continue;
-            } else {
-                break;
+            // c = console_getchar();
+            match crate::uart::pop() {
+                Some(c) => {
+                    ch = c;
+                    break;
+                }
+                _ => {
+                    suspend_current_and_run_next();
+                    continue;
+                }
             }
         }
-        let ch = c as u8;
         unsafe { user_buf.buffers[0].as_mut_ptr().write_volatile(ch); }
         1
     }
@@ -39,9 +43,11 @@ impl File for Stdout {
         panic!("Cannot read from stdout!");
     }
     fn write(&self, user_buf: UserBuffer) -> usize {
+        // println!("stdout");
         for buffer in user_buf.buffers.iter() {
             print!("{}", core::str::from_utf8(*buffer).unwrap());
         }
+        // println!("after stdout");
         user_buf.len()
     }
 }

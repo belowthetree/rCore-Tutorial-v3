@@ -12,7 +12,7 @@ use riscv::register::{
     stval,
     sie,
 };
-use crate::syscall::syscall;
+use crate::{plic, sbi, syscall::syscall};
 use crate::task::{
     exit_current_and_run_next,
     suspend_current_and_run_next,
@@ -26,6 +26,11 @@ global_asm!(include_str!("trap.S"));
 
 pub fn init() {
     set_kernel_trap_entry();
+    sbi::set_device_handler(device_trap_handler as usize);
+}
+
+pub unsafe fn device_trap_handler() {
+    plic::handler();
 }
 
 fn set_kernel_trap_entry() {
@@ -84,6 +89,12 @@ pub fn trap_handler() -> ! {
             set_next_trigger();
             suspend_current_and_run_next();
         }
+        Trap::Interrupt(Interrupt::SupervisorExternal) => {
+            panic!("SupervisorExternal");
+        }
+        // Trap::Interrupt(Interrupt::SupervisorExternal) => {
+        //     panic!("SupervisorExternal");
+        // }
         _ => {
             panic!("Unsupported trap {:?}, stval = {:#x}!", scause.cause(), stval);
         }

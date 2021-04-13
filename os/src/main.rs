@@ -6,6 +6,8 @@
 #![feature(const_in_array_repeat_expressions)]
 #![feature(alloc_error_handler)]
 
+use uart::Uart;
+
 extern crate alloc;
 
 #[macro_use]
@@ -13,6 +15,8 @@ extern crate bitflags;
 
 #[macro_use]
 mod console;
+#[macro_use]
+mod uart;
 mod lang_items;
 mod sbi;
 mod syscall;
@@ -23,8 +27,10 @@ mod timer;
 mod mm;
 mod fs;
 mod drivers;
+mod plic;
 
 global_asm!(include_str!("entry.asm"));
+
 
 fn clear_bss() {
     extern "C" {
@@ -39,7 +45,8 @@ fn clear_bss() {
 #[no_mangle]
 pub fn rust_main() -> ! {
     clear_bss();
-    println!("[kernel] Hello, world!");
+    Uart::new().init();
+    plic::init();
     mm::init();
     mm::remap_test();
     trap::init();
@@ -47,6 +54,7 @@ pub fn rust_main() -> ! {
     timer::set_next_trigger();
     fs::list_apps();
     task::add_initproc();
+    println!("after add initproc");
     task::run_tasks();
     panic!("Unreachable in rust_main!");
 }

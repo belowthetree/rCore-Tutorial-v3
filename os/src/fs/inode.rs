@@ -95,7 +95,7 @@ impl OpenFlags {
 pub fn open_file(name: &str, flags: OpenFlags) -> Option<Arc<OSInode>> {
     let (readable, writable) = flags.read_write();
     if flags.contains(OpenFlags::CREATE) {
-        if let Some(inode) = ROOT_INODE.find(name) {
+        if let Some(inode) = ROOT_INODE.find(name, |_, _|{}) {
             // clear size
             inode.clear();
             Some(Arc::new(OSInode::new(
@@ -115,7 +115,8 @@ pub fn open_file(name: &str, flags: OpenFlags) -> Option<Arc<OSInode>> {
                 })
         }
     } else {
-        ROOT_INODE.find(name)
+        println!("before find");
+        ROOT_INODE.find(name, |str1, str2|{println!("{}, {}", str1, str2)})
             .map(|inode| {
                 if flags.contains(OpenFlags::TRUNC) {
                     inode.clear();

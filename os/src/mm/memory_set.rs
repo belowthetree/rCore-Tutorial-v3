@@ -218,10 +218,8 @@ impl MemorySet {
     }
     pub fn activate(&self) {
         let satp = self.page_table.token();
-        unsafe {
-            satp::write(satp);
-            llvm_asm!("sfence.vma" :::: "volatile");
-        }
+        satp::write(satp);
+        // llvm_asm!("sfence.vma" :::: "volatile"); // 此处会卡死，原因不明
     }
     pub fn translate(&self, vpn: VirtPageNum) -> Option<PageTableEntry> {
         self.page_table.translate(vpn)

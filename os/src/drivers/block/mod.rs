@@ -15,6 +15,11 @@ lazy_static! {
     pub static ref BLOCK_DEVICE: Arc<dyn BlockDevice> = Arc::new(BlockDeviceImpl::new());
 }
 
+pub fn handler(pin_idx : usize) {
+    let device = BLOCK_DEVICE.clone();
+    device.pending(pin_idx);
+}
+
 #[allow(unused)]
 pub fn block_device_test() {
     let block_device = BLOCK_DEVICE.clone();

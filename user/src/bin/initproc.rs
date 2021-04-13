@@ -14,6 +14,7 @@ use user_lib::{
 #[no_mangle]
 fn main() -> i32 {
     if fork() == 0 {
+        println!("in initproc");
         exec("user_shell\0", &[0 as *const u8]);
     } else {
         loop {

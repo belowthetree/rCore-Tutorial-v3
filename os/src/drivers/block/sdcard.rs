@@ -15,6 +15,7 @@ use k210_soc::{
 };
 use spin::Mutex;
 use lazy_static::*;
+
 use super::BlockDevice;
 use core::convert::TryInto;
 
@@ -749,5 +750,8 @@ impl BlockDevice for SDCardWrapper {
     }
     fn write_block(&self, block_id: usize, buf: &[u8]) {
         self.0.lock().write_sector(buf,block_id as u32).unwrap();
+    }
+    fn pending(&self, pin_idx : usize) {
+        panic!("k210 no pending!");
     }
 }

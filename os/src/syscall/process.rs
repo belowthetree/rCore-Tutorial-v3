@@ -52,6 +52,7 @@ pub fn sys_fork() -> isize {
 }
 
 pub fn sys_exec(path: *const u8, mut args: *const usize) -> isize {
+    println!("sys exec");
     let token = current_user_token();
     let path = translated_str(token, path);
     let mut args_vec: Vec<String> = Vec::new();
@@ -63,14 +64,20 @@ pub fn sys_exec(path: *const u8, mut args: *const usize) -> isize {
         args_vec.push(translated_str(token, arg_str_ptr as *const u8));
         unsafe { args = args.add(1); }
     }
+    println!("path {}", path);
     if let Some(app_inode) = open_file(path.as_str(), OpenFlags::RDONLY) {
+        println!("get app");
         let all_data = app_inode.read_all();
+        println!("after read all");
         let task = current_task().unwrap();
+        println!("after task");
         let argc = args_vec.len();
         task.exec(all_data.as_slice(), args_vec);
         // return argc because cx.x[10] will be covered with it later
+        println!("success");
         argc as isize
     } else {
+        println!("fail");
         -1
     }
 }
