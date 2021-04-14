@@ -6,8 +6,6 @@
 #![feature(const_in_array_repeat_expressions)]
 #![feature(alloc_error_handler)]
 
-use uart::Uart;
-
 extern crate alloc;
 
 #[macro_use]
@@ -28,6 +26,8 @@ mod mm;
 mod fs;
 mod drivers;
 mod plic;
+
+use uart::Uart;
 
 global_asm!(include_str!("entry.asm"));
 
@@ -52,9 +52,8 @@ pub fn rust_main() -> ! {
     trap::init();
     trap::enable_timer_interrupt();
     timer::set_next_trigger();
-    fs::list_apps();
     task::add_initproc();
-    println!("after add initproc");
+    fs::list_apps();
     task::run_tasks();
     panic!("Unreachable in rust_main!");
 }

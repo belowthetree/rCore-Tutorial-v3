@@ -30,7 +30,7 @@ impl BlockDevice for VirtIOBlock {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            println!("b {:x}", t.header as *const VirtIOHeader as usize);
+            // println!("b {:x}", t.header as *const VirtIOHeader as usize);
             t.sync_read(block_id, buf).expect("Error when reading VirtIOBlk");
         }
     }
@@ -38,7 +38,6 @@ impl BlockDevice for VirtIOBlock {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            println!("write");
             t.write_block(block_id, buf).expect("Error when writing VirtIOBlk");
         }
     }
@@ -49,7 +48,6 @@ impl BlockDevice for VirtIOBlock {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            noteln!("p");
             let rt = t.pending();
             match rt{
                 Ok(_) => {}

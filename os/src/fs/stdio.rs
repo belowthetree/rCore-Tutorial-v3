@@ -1,6 +1,5 @@
 use super::File;
 use crate::mm::{UserBuffer};
-use crate::sbi::console_getchar;
 use crate::task::suspend_current_and_run_next;
 
 pub struct Stdin;
@@ -11,12 +10,10 @@ impl File for Stdin {
     fn readable(&self) -> bool { true }
     fn writable(&self) -> bool { false }
     fn read(&self, mut user_buf: UserBuffer) -> usize {
-        // println!("stdin");
         assert_eq!(user_buf.len(), 1);
         // busy loop
-        let mut ch;
+        let ch;
         loop {
-            // c = console_getchar();
             match crate::uart::pop() {
                 Some(c) => {
                     ch = c;
@@ -43,11 +40,9 @@ impl File for Stdout {
         panic!("Cannot read from stdout!");
     }
     fn write(&self, user_buf: UserBuffer) -> usize {
-        // println!("stdout");
         for buffer in user_buf.buffers.iter() {
             print!("{}", core::str::from_utf8(*buffer).unwrap());
         }
-        // println!("after stdout");
         user_buf.len()
     }
 }

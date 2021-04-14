@@ -6,7 +6,6 @@
 
 use core::fmt::{self, Write, Error};
 use core::convert::TryInto;
-use lazy_static::*;
 
 pub const UART_ADDR : usize = 0x1000_0000;
 const LSR_OFFSET : usize = 5;
@@ -84,10 +83,6 @@ macro_rules! noteln {
     ($fmt: literal $(, $($arg: tt)+)?) => {
         $crate::uart::print(format_args!(concat!($fmt, "\n") $(, $($arg)+)?));
     }
-}
-
-pub fn get_char()->Option<u8> {
-    Uart::new().get()
 }
 
 impl Uart {

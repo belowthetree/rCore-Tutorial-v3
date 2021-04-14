@@ -165,6 +165,7 @@ impl MemorySet {
                 if ph_flags.is_read() { map_perm |= MapPermission::R; }
                 if ph_flags.is_write() { map_perm |= MapPermission::W; }
                 if ph_flags.is_execute() { map_perm |= MapPermission::X; }
+                // println!("stad {:x}, edad {:x}, {:x}, {:x}", start_va.0, end_va.0,t, ph.file_size());
                 let map_area = MapArea::new(
                     start_va,
                     end_va,
