@@ -77,8 +77,11 @@ pub fn exit_current_and_run_next(exit_code: i32) {
 
 lazy_static! {
     pub static ref INITPROC: Arc<TaskControlBlock> = Arc::new({
+        println!("before open");
         let inode = open_file("initproc", OpenFlags::RDONLY).unwrap();
+        println!("before read");
         let v = inode.read_all();
+        println!("before new");
         TaskControlBlock::new(v.as_slice())
     });
 }

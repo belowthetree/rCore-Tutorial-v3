@@ -47,12 +47,16 @@ pub fn rust_main() -> ! {
     clear_bss();
     Uart::new().init();
     plic::init();
+    trap::init();
     mm::init();
     mm::remap_test();
-    trap::init();
+    println!("after remap");
     trap::enable_timer_interrupt();
+    println!("after timer");
     timer::set_next_trigger();
+    println!("after trigger");
     task::add_initproc();
+    println!("after add");
     fs::list_apps();
     task::run_tasks();
     panic!("Unreachable in rust_main!");

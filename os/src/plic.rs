@@ -42,19 +42,19 @@ fn claim() -> Option<u32> {
     }
 }
 
-#[allow(dead_code)]
-fn pending() -> Option<u32> {
-    unsafe {
-        let ptr = PENDING as *mut u32;
-        let idx = ptr.read_volatile();
-        if idx == 0{
-            None
-        }
-        else {
-            Some(idx)
-        }
-    }
-}
+// #[allow(dead_code)]
+// fn pending() -> Option<u32> {
+//     unsafe {
+//         let ptr = PENDING as *mut u32;
+//         let idx = ptr.read_volatile();
+//         if idx == 0{
+//             None
+//         }
+//         else {
+//             Some(idx)
+//         }
+//     }
+// }
 
 fn set_threshold(num : usize){
     unsafe {
@@ -77,11 +77,11 @@ fn set_priority(idx : usize, num : usize){
     }
 }
 
-pub fn handler(){
+pub fn pending(){
     if let Some(pin) = claim(){
         match pin {
             1..=8 => {
-                drivers::handler(pin as usize);
+                drivers::pending(pin as usize);
             }
             10 => {
                 uart::pending();

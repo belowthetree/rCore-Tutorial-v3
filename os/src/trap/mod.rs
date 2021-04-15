@@ -30,7 +30,7 @@ pub fn init() {
 }
 
 pub unsafe fn device_trap_handler() {
-    plic::handler();
+    plic::pending();
 }
 
 fn set_kernel_trap_entry() {

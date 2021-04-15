@@ -33,7 +33,7 @@ impl Inode {
             block_device,
         }
     }
-    // 此处卡死，标记
+
     fn read_disk_inode<V>(&self, f: impl FnOnce(&DiskInode) -> V) -> V {
         let t = get_block_cache(
             self.block_id,

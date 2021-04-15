@@ -18,7 +18,7 @@ pub const CLOCK_FREQ: usize = 12500000;
 
 #[cfg(feature = "board_qemu")]
 pub const MMIO: &[(usize, usize)] = &[
-    (0x10001000, 0x8000),
+    (0x10001000, 0x9000),
     (0x0C00_0000, 0x3000),      /* PLIC      */
     (0x0C20_0000, 0x1000),      /* PLIC      */
     (0x1000_0000, 0x1000),      /* UART      */

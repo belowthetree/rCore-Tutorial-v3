@@ -30,7 +30,6 @@ impl BlockDevice for VirtIOBlock {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            // println!("b {:x}", t.header as *const VirtIOHeader as usize);
             t.sync_read(block_id, buf).expect("Error when reading VirtIOBlk");
         }
     }
@@ -38,7 +37,7 @@ impl BlockDevice for VirtIOBlock {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            t.write_block(block_id, buf).expect("Error when writing VirtIOBlk");
+            t.sync_write(block_id, buf).expect("Error when writing VirtIOBlk");
         }
     }
     fn pending(&self, pin_idx : usize) {
@@ -60,9 +59,12 @@ impl BlockDevice for VirtIOBlock {
 impl VirtIOBlock {
     #[allow(unused)]
     pub fn new() -> Self {
-        Self(VirtIOBlk::new(
+        println!("new blk");
+        let rt = Self(VirtIOBlk::new(
             unsafe { &mut *(VIRTIO0 as *mut VirtIOHeader) }
-        ).unwrap())
+        ).unwrap());
+        let input = crate::drivers::input::virtio_input::VirtIOInputImpl::new();
+        rt
     }
 }
 
@@ -75,6 +77,7 @@ pub extern "C" fn virtio_dma_alloc(pages: usize) -> PhysAddr {
         assert_eq!(frame.ppn.0, ppn_base.0 + i);
         QUEUE_FRAMES.lock().push(frame);
     }
+    // println!("virtio alloc {} pages {:x}", pages, ppn_base.0 * 4096);
     ppn_base.into()
 }
 
@@ -85,6 +88,7 @@ pub extern "C" fn virtio_dma_dealloc(pa: PhysAddr, pages: usize) -> i32 {
         frame_dealloc(ppn_base);
         ppn_base.step();
     }
+    // println!("virtio dealloc {} pages {:x}", pages, pa.0);
     0
 }
 

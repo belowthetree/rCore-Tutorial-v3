@@ -102,16 +102,21 @@ pub fn init_frame_allocator() {
 }
 
 pub fn frame_alloc() -> Option<FrameTracker> {
-    FRAME_ALLOCATOR
+    let t = FRAME_ALLOCATOR
         .lock()
         .alloc()
-        .map(|ppn| FrameTracker::new(ppn))
+        .map(|ppn| FrameTracker::new(ppn));
+    // if let Some(t) = &t {
+    //     println!("alloc {:x}", t.ppn.0 * 4096);
+    // }
+    t
 }
 
 pub fn frame_dealloc(ppn: PhysPageNum) {
     FRAME_ALLOCATOR
         .lock()
         .dealloc(ppn);
+    // println!("dealloc {:x}", ppn.0 * 4096);
 }
 
 #[allow(unused)]
