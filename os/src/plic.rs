@@ -4,6 +4,8 @@
 //! 接收中断（handler）->获取中断来源针脚（claim）->通知处理完毕（complete）
 //! 2020年12月 zg
 
+#![allow(dead_code)]
+
 use crate::{drivers, uart};
 
 const PENDING      : usize = 0x0c00_1000;

@@ -30,14 +30,14 @@ impl BlockDevice for VirtIOBlock {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            t.sync_read(block_id, buf).expect("Error when reading VirtIOBlk");
+            t.read_block_nb(block_id, buf).expect("Error when reading VirtIOBlk");
         }
     }
     fn write_block(&self, block_id: usize, buf: &[u8]) {
         unsafe {
             let t = self as *const Self as *mut Self;
             let t = &mut (*t).0;
-            t.sync_write(block_id, buf).expect("Error when writing VirtIOBlk");
+            t.write_block_nb(block_id, buf).expect("Error when writing VirtIOBlk");
         }
     }
     fn pending(&self, pin_idx : usize) {
@@ -63,7 +63,7 @@ impl VirtIOBlock {
         let rt = Self(VirtIOBlk::new(
             unsafe { &mut *(VIRTIO0 as *mut VirtIOHeader) }
         ).unwrap());
-        let input = crate::drivers::input::virtio_input::VirtIOInputImpl::new();
+        // let input = crate::drivers::input::virtio_input::VirtIOInputImpl::new();
         rt
     }
 }

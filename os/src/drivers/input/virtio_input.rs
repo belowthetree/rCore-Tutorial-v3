@@ -13,7 +13,7 @@ unsafe impl Send for VirtIOInputImpl{}
 impl VirtIOInputImpl {
     pub fn new()->Self {
         let mut buffer = Vec::<u64>::new();
-        for i in 0..32 {
+        for _ in 0..32 {
             buffer.push(0);
         }
         let t = buffer.as_mut_slice() as *mut [u64];

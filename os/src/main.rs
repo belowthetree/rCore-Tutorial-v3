@@ -26,6 +26,7 @@ mod mm;
 mod fs;
 mod drivers;
 mod plic;
+mod sync;
 
 use uart::Uart;
 
