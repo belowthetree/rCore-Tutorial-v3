@@ -80,8 +80,7 @@ run_graphic: build
 		-device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY_PA) \
 		-drive file=$(FS_IMG),if=none,format=raw,id=x0 \
 		-device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0 \
-		-device virtio-gpu-device -machine virt \
-		-device virtio-keyboard
+		-device virtio-gpu-device -machine virt
 
 run-inner: build
 ifeq ($(BOARD),qemu)
