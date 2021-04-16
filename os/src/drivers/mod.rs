@@ -1,6 +1,8 @@
 pub mod input;
 mod block;
+mod gpu;
 
+pub use gpu::GPU_DEVICE;
 pub use block::BLOCK_DEVICE;
 
 pub fn pending(pin_idx : usize) {

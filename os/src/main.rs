@@ -51,14 +51,17 @@ pub fn rust_main() -> ! {
     trap::init();
     mm::init();
     mm::remap_test();
-    println!("after remap");
+    // println!("after remap");
     trap::enable_timer_interrupt();
-    println!("after timer");
+    // println!("after timer");
     timer::set_next_trigger();
-    println!("after trigger");
+    // println!("after trigger");
     task::add_initproc();
-    println!("after add");
+    // println!("after add");
     fs::list_apps();
+    drivers::GPU_DEVICE.lock().reset();
+    drivers::GPU_DEVICE.lock().draw_test();
+    drivers::GPU_DEVICE.lock().refresh();
     task::run_tasks();
     panic!("Unreachable in rust_main!");
 }
