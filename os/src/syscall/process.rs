@@ -113,3 +113,9 @@ pub fn sys_waitpid(pid: isize, exit_code_ptr: *mut i32) -> isize {
     }
     // ---- release current PCB lock automatically
 }
+
+pub fn sys_draw(x: usize, y: usize)->isize {
+    crate::drivers::GPU_DEVICE.lock().draw_point(x, y);
+    crate::drivers::GPU_DEVICE.lock().refresh();
+    0
+}

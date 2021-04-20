@@ -11,6 +11,7 @@ const SYSCALL_GETPID: usize = 172;
 const SYSCALL_FORK: usize = 220;
 const SYSCALL_EXEC: usize = 221;
 const SYSCALL_WAITPID: usize = 260;
+const SYSCALL_DRAW: usize = 1;
 
 fn syscall(id: usize, args: [usize; 3]) -> isize {
     let mut ret: isize;
@@ -23,6 +24,10 @@ fn syscall(id: usize, args: [usize; 3]) -> isize {
         );
     }
     ret
+}
+
+pub fn sys_draw(x : usize, y : usize)-> isize {
+    syscall(SYSCALL_DRAW, [x, y, 0])
 }
 
 pub fn sys_dup(fd: usize) -> isize {

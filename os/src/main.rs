@@ -59,7 +59,7 @@ pub fn rust_main() -> ! {
     task::add_initproc();
     // println!("after add");
     fs::list_apps();
-    // drivers::GPU_DEVICE.lock().reset();
+    drivers::GPU_DEVICE.lock().reset();
     // drivers::GPU_DEVICE.lock().draw_test();
     // drivers::GPU_DEVICE.lock().refresh();
     task::run_tasks();
