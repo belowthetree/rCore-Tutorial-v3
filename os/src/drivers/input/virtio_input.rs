@@ -42,9 +42,10 @@ impl InputDevice for VirtIOInputImpl {
         if pin_idx != 8 {
             return;
         }
+        println!("pending");
         unsafe {
             let t = self as *const Self as *mut Self;
-            noteln!("{:?}", (*t).driver.pending());
+            noteln!("{:?}", (*t).driver.pending(|s|{println!("{}", s)}));
         }
     }
 }
